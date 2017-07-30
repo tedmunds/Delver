@@ -52,6 +52,3 @@ obj/
 *.sln
 *.csproj
 *.suo
-
-# Ignore save files so we arn't constantly remaking them
-data/
