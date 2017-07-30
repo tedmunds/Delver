@@ -26,7 +26,7 @@ public class EnemyController_Ranged : EnemyController
     {
         base.Update_Chase();
 
-        if(Time.time - lastAttackEndedTime > attacker.GetBaseAttack().cooldown && InAttackRange())
+        if(Time.time - lastAttackEndedTime > abilities.GetBaseAttack().cooldown && InAttackRange())
         {
             GotoState(STATE_ATTACK);
         }
@@ -35,7 +35,7 @@ public class EnemyController_Ranged : EnemyController
     public override void EndAttack()
     {
         // Override to go into chase instead of idle, after a delay
-        TimerManager.SetTimer(ResumeChase, attacker.GetBaseAttack().cooldown);
+        TimerManager.SetTimer(ResumeChase, abilities.GetBaseAttack().cooldown);
     }
 
 

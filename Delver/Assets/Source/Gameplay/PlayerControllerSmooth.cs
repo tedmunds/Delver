@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Actor))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Attacker))]
+[RequireComponent(typeof(AbilityUser))]
 [RequireComponent(typeof(CharacterMover))]
 public class PlayerControllerSmooth : ControlStateMachine
 {
@@ -85,7 +85,7 @@ public class PlayerControllerSmooth : ControlStateMachine
 
     private Actor actor;
     private Animator animator;
-    private Attacker attacker;
+    private AbilityUser attacker;
     private CharacterMover characterMover;
 
     // Pending input is an input made during a state that doesnt allow that change to happen until the state exits
@@ -128,7 +128,7 @@ public class PlayerControllerSmooth : ControlStateMachine
 
         actor = GetComponent<Actor>();
         animator = GetComponent<Animator>();
-        attacker = GetComponent<Attacker>();
+        attacker = GetComponent<AbilityUser>();
         characterMover = GetComponent<CharacterMover>();
         
         world = TileWorldManager.instance;

@@ -26,7 +26,7 @@ public enum EnemyCombatType
 
 [RequireComponent(typeof(CharacterMover))]
 [RequireComponent(typeof(Actor))]
-[RequireComponent(typeof(Attacker))]
+[RequireComponent(typeof(AbilityUser))]
 [RequireComponent(typeof(Animator))]
 public class EnemyController : ControlStateMachine
 {
@@ -47,7 +47,7 @@ public class EnemyController : ControlStateMachine
     // Cached components
     protected CharacterMover characterMover;
     protected Actor actor;
-    protected Attacker attacker;
+    protected AbilityUser abilities;
     protected Animator animator;
 
     protected Actor playerTarget;
@@ -68,7 +68,7 @@ public class EnemyController : ControlStateMachine
 
         characterMover = GetComponent<CharacterMover>();
         actor = GetComponent<Actor>();
-        attacker = GetComponent<Attacker>();
+        abilities = GetComponent<AbilityUser>();
         animator = GetComponent<Animator>();
 
         // Dont need this crap, we know some enemies wont have anims implemented yet, but we want unified anim system
@@ -149,14 +149,14 @@ public class EnemyController : ControlStateMachine
     {
         StopMovement();
 
-        attacker.StartAttack(attacker.GetBaseAttack(), GetAttackDirection(), EndAttack);
+        abilities.StartAttack(abilities.GetBaseAttack(), GetAttackDirection(), EndAttack);
 
         animator.SetTrigger("Attack");
     }
 
     public virtual void EndAttack()
     {
-        TimerManager.SetTimer(OnAttackCooldownEnd, attacker.GetBaseAttack().cooldown);
+        TimerManager.SetTimer(OnAttackCooldownEnd, abilities.GetBaseAttack().cooldown);
     }
 
     protected virtual void OnAttackCooldownEnd()
@@ -223,7 +223,7 @@ public class EnemyController : ControlStateMachine
             return false;
         }
 
-        if((playerTarget.transform.position - transform.position).sqrMagnitude < attacker.GetBaseAttack().idealRange)
+        if((playerTarget.transform.position - transform.position).sqrMagnitude < abilities.GetBaseAttack().idealRange)
         {
             return true;
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Actor))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Attacker))]
+[RequireComponent(typeof(AbilityUser))]
 [RequireComponent(typeof(TileMover))]
 public class PlayerController : ControlStateMachine
 {
@@ -79,7 +79,7 @@ public class PlayerController : ControlStateMachine
 
     private Actor actor;
     private Animator animator;
-    private Attacker attacker;
+    private AbilityUser attacker;
     private TileMover characterMover;
 
     // Pending input is an input made during a state that doesnt allow that change to happen until the state exits
@@ -114,7 +114,7 @@ public class PlayerController : ControlStateMachine
 
         actor = GetComponent<Actor>();
         animator = GetComponent<Animator>();
-        attacker = GetComponent<Attacker>();
+        attacker = GetComponent<AbilityUser>();
         characterMover = GetComponent<TileMover>();
     }
 

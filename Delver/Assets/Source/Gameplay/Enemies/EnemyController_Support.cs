@@ -60,7 +60,7 @@ public class EnemyController_Support : EnemyController
 
         Vector3 toTarget = (chosenTarget.transform.position - transform.position).normalized;
 
-        attacker.StartAttack(healingAbility, toTarget, HealAbilityDone);
+        abilities.StartAttack(healingAbility, toTarget, HealAbilityDone);
 
         animator.SetTrigger("Attack");
     }

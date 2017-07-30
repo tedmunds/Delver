@@ -21,7 +21,7 @@ public class EnemyController_Pursuer : EnemyController
     public override void EndAttack()
     {
         // Override to go into chase instead of idle, after a delay
-        TimerManager.SetTimer(ResumeChase, attacker.GetBaseAttack().cooldown);        
+        TimerManager.SetTimer(ResumeChase, abilities.GetBaseAttack().cooldown);        
     }
 
 

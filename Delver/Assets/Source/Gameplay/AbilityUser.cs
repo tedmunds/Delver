@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Actor))]
-public class Attacker : MonoBehaviour 
+public class AbilityUser : MonoBehaviour 
 {
     public delegate void AttackFinishedCallback();
     
     [SerializeField]
-    private Ability baseAttack;
+    private Ability baseAbility;
     
     private Actor owner;
 
@@ -22,7 +22,7 @@ public class Attacker : MonoBehaviour
 
     private TileWorldManager world;
 
-    public Ability GetBaseAttack() { return baseAttack; }
+    public Ability GetBaseAttack() { return baseAbility; }
 
     public void Start()
     {
@@ -50,7 +50,7 @@ public class Attacker : MonoBehaviour
     /// </summary>
     public bool StartAttack(Ability attackToPerform, Vector3 direction, AttackFinishedCallback callback)
     {
-        if(!baseAttack || !attackToPerform)
+        if(!baseAbility || !attackToPerform)
         {
             return false;
         }
