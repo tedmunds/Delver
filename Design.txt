@@ -1,0 +1,188 @@
+- Inspiration:
+	- Diablo 2
+	- Runescape
+	- Nuclear Throne
+	- Binding of Isaac
+
+- "Mini Diablo"
+- Grid based DarkSouls, with zelda-esque room based combat
+- Not so grid based anymore, still kind of though, free cardinal direction movement and attack at any angle
+	- Top - down ish, almost a 3/4 view but with top down movement / attack like Binding of Isaac
+
+- Design Pillars:
+	- Every decision is a risk / reward, every action is a risk
+
+
+- Each room is a challenge to open the next room
+- Combat is timing based and spatial, few hits will kill. No drawn out fights (with normal enemies)
+- Movement is grid based but smooth and real time (not any more)
+
+- Combat consists of normal fast attack (shares one animationn) (melee)
+- One special slow attack (depends on the weapon) (unique animation)
+	- Or at maybe one animation with unique effects
+
+- The hook is the loot
+	- Each weapon you find has stats + one of (ideally quite a few) special attacks
+	- Stats:
+		- Attack speed
+		- Attack length (how long before you gain movement back b/c attack locks you in place)
+		- Damage
+		- Weight / Interuption strength or something, to interrupt enemy attack
+
+- Combat has the following mechanics:
+	- Dodging = become invulnerable and move 1 or 2 squares in a direction
+		- For avoiding attacks at last minute
+	- Interrupting = some weapon are better then others at interupting an enemies attack, giving 
+	the player more opening to attack
+	- Weapon speed = Slow weapons mean you have to wait for an opening
+	- Enemies attack cooldown = after they attack they sit still for some time. Some enemies are very
+	fast and need to be interupted to get in some attacks
+	- Stamina = Attacking and rolling use up stamina that doesnt regenerate until some time after
+	the player doesnt use any. 
+		- Without any stamina you cant roll or attack so it paces out combat
+
+- Loot has the following mechanics
+	- Damage reduction? Maybe lump into health
+	- Bonus health (see above)
+	- Stamina regeneration 
+	- Bonus stamina
+	- Maybe health regen (very rare if at all)
+	- Roll distance?
+	- Bonus damage	
+	- Health potion efficacy
+	- Colour to indicate rarity!
+
+- Items: Each item is basically just a protrait and a few stats
+	- Armor: how many peices yet to be decided, likely just 1
+	- Weapon: also has a stat bonus or two: maybe elite ones have 2
+		- Weapons also provide a special ability 
+	- Maybe a trinket slot or something for an extra boost
+	- Health potion
+		- You can bring a set number with you into the dungeon
+		- Buy them in the shoppe with gold earned in dungeon
+
+- Special abilities:
+	- Always combat focused
+	- Take longer than normal attacks, unless its thing is that its fast
+	- Does not animation character, does things in world like a line of spikes that come out of the ground
+
+- Room mechanics:
+	- A room is a descrete combat encounter, so each room needs to have an interesting combination
+	- Enemy composition is always as a squad, and they fight as a squad to make it interesting
+	- For instance there may be a healer in the group, and then some melee guys that you can either 
+	out DPS the healing, or try to dodge melee guys and kill healer
+	
+	- Stretch Goal: Room can have a special puzzle or key room
+
+- Enemies:
+	- Enemies have tops one or two animations
+	- A single species of enemy can be reskinned to make different classes like healer or melee guy 
+	- Intuition says they should all move the same speed
+	- Stats:
+		- Health
+		- Attack speed
+		- Attack cooldown
+		- Interuption resistance
+	
+- Enemy leaders:
+	- Some groups (maybe every) has an enemy leader
+	- Enemy leader has more health / does more damage (probably, may not need it)
+	- Has a chance to drop loot (maybe always, since loot is already random)
+
+- The Dungeon:
+	- Rooms are connected in spatially consistent way to make up the floor in the dungeon
+	- Doors lead to different rooms
+	- Rare floors will have a treasure room, which you need the key to open
+	- The key is elsewhere in the floor
+	- You can only be in one room at a time, but should you be able to flee?
+	- Some rooms have extra obsticles if thats interesting, like blocks you cant roll through and that
+	block special attacks
+
+	- One room on the floor contains the stairs down to the next floor
+	- There are 5? floors per section of the dungeon
+	- The 5th floor is a boss room
+
+- Bosses / boss room:
+	- Bosses have more than 1 attack, that can just be re-use of the special attacks from the player weapons
+	- They take up more than one tile in the room, maybe composed of multiple animated parts
+		- And have some big AOE
+	- VERY IMPORTANT that they maintin the timing / avoiding based combat and not fall into boaring
+	health sacks
+
+- The metagame:
+	- Each run you can flee with the equipment you are carrying, and save that equipment for another run
+	- Otherwise you loose everything if you die
+	- However if you flee you get to keep your gold
+	- There is a store that stocks random weapons of varing rarity and one super rare random one
+		- You can save up / farm gold in this way, and use it to buy weapons
+	- You can also spend youre money on health potions (which you dont loose if you dont use them)
+		- So you can farm easier levels to save up money to make longer runs easier
+		- Or if youre pro you should be able to beat it with no health potions or super gear
+
+
+
+- The overworld:
+	- Little town (probably one screens worth)
+	- Merchant sells items for gold (aquired in dungeon)
+		- These are general purpose items / less rare items but are cheaper
+		- In case you loose everything and need to gear up
+	- Wizard sells health potions
+		- Can buy up to your max stock
+		- Maybe also buy higher stock with a bag of holding or something? Very expensive, may be interesting
+	- Theif / dungeon raider
+		- Little rat man that steal items from the depths
+		- He will have one item at a time
+			- Its always a rarer item and is more expensive
+			- Maybe he has a chance of having one of the items you lost last time you died? Could be cool.
+	- Well: This is where you enter the dungeon by climbing down a ladder
+
+- Dungeon Levels:
+	- The first dungeon has 5 level themes, which in turn are used 5 times each.
+	1. Dank Sewers: filled with rats and spiders. Sewer themed rooms. Few combat mechanics other than 
+	swarming enemeis
+	2. Earthen Caverns: Caves filled with more rats, but also goblins and bears or something. Some 
+	enemy team composition from the goblin, like an archer and some melee guys
+	3. Deep City: Dwarves, which move slow but have healer and ranged attacks, as well as melee. Rooms
+	have more complicated setups
+	4. Catacombs: Skeletons and zombies. Mechanic is that killed enemies get back up once or twice, also
+	have healers in the form of necromancer, need to comunicate which enemies get back up like with DS 
+	white eyed / red eyed skeltons
+	5. Hidden Lair: Demons that move around a lot in patterns and use lots of special attack. No plain melee,
+	require lots of dodging to get in one attack
+
+- Bosses:
+	- A boss should be the culmination of getting through the level. The ultimate test of risk / reward
+	- It doesnt have to give good loot, it just promises getting to the next layer with better loot
+	
+	1. Giant Rat: Charges aback and forth across the room. If you stand outside of his LOS he spews gas
+	attack, making him unkillable until he charges and hits the wall. Then you attack from behind before he 
+	gets up and spews gas again
+	2. Goblin King: Has a bunch of reinforcements that he calls in, otherwise hes just a fairly tough goblin
+	that tends to stand back	
+	3. Jailed Beast: Another giant boss that smashes tiles with its fists from above. One attack does both 
+	at same time and the other does a rapid succession of smashes. Each smash is signaled by shadow on tile.
+	Have to get some attacks in then dodge fists, maybe attack fists to get rid of them?
+	4. Forgotten Lich: Has some ranged skills that cause damage in lines out in front of him. Continuously 
+	raises skeltons? Does a heal move where he stops moving and you have to out DPS the heal or the fight 
+	will take a long time (with more skeletons). The skeletons die very easily though.
+	5. Resurgent Demon: Darts in straight lines around the room trailing fire tiles that fade out. Have to bait 
+	him into charging and roll out of the way at the last second, then run up behind and get a hit in. Also 
+	has a very fast melee attack with a long cooldown
+
+- Killing Final Boss:
+	- Earns you a badge. You can see badges on your characer at the top of the screen or something? As a big 
+	overlapping list to remind you how cool you are.
+
+- More Metagame (Stretch goals with more scope)
+	- Use badges to trade with other NPC in the village for some sort of meta game going on, like trying to 
+	maximize your honour or impress as many people as possible? So show your badges to the right people? 
+	- Needs more design work, needs to be an interesting economy with some sort of gameplay relevance to be
+	interesting
+
+
+
+
+
+
+
+

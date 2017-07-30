@@ -1,0 +1,88 @@
+----- Week 1 -----
+
+7/22/17
+> Tile based movement
+> Rolling a set number of tiles
+> Tile based world and tile rendering
+> Attacking tile in direction of input
+
+7/23/17
+> Port movement to smooth instead of tile based (just wasnt quite right)
+> Attack collider system with rotation for basic melee (and slash anim)
+> Implement Swords animations for player
+> Constrain movement to room
+> Enemies use attacks (just melee for now)
+> Enemy movement modes chase
+> Enemy attack telegraph
+> Enemy squad (different types of enemies and spawn formation)
+> Enemy attack mode ranged
+> Ranged projectile attack
+> Simple squad behaviour for different enemy types: Ranged stay in back healers behind etc. (just implicitin behaviour)
+> Load room (spawn tile map, load enemy squad(s?))
+> Room exit door, that loads next room with another squad
+> Record some gifs of basic gameplay
+
+7/27/17
+> Enemy attack mode support
+
+- Support enemy attack cooldowns
+- Rename attack system to ability or something, so heal attack doesnt seem so weird
+- refactor base attack to remove duplicate code
+
+- Special ability attack with multiple affected tiles (do effect in a line of X tiles)
+- Special attack in radius around position
+- Special attack cross shape in X tiles
+
+- Multiple exits to rooms within dungeon, in simple layouts
+- Dungeon room layout randomization
+- Exit to new floor with new dungeon layout
+
+- Dungeon floor N has subset of enemy squads that can spawn + a room theme
+- After N floors, theme changes. Can be defined pretty specifically actually as a big list of data structs
+
+- Items + inventory concept
+- Special attack granted by weapon item
+
+- Modifiers used for movement, daamge output and damage received, and roll distance + roll speed (use same mod as movement)
+- Modifiers granted by equipped items
+
+- Special potion items that heal player
+
+- Tiles in world can have properties
+- Modifiers granted by tiles in world
+
+- Special attacks can apply conditions like burning and stuff to enemies
+- Special attacks can apply a condition / modifier to tiles
+
+- Inventory items can have images associated with them
+- Items in inventory UI
+
+- Enemies can drop pickups: gold which goes to global store, and items have to be manually picked up
+- Pick up item / trade with item in inventory UI
+
+- Overworld scene, with dungeon entrance
+- Interaction with NPC to open a shop menu UI
+- Drag drop items from store to inventory and vice versa: use gold to buy items
+
+- Potions preserved on death, other items dropped, gold dropped until its added to back by returning to overworld
+
+- Multiple store NPC in overworld with different items
+- Store NPC with random items
+
+- Randomized item properties, including special ability
+
+- Items and gold can be preserved across play sessions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
