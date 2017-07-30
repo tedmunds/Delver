@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Attacks/SimpleAttack")]
-public class Attack_SimpleMelee : Attack
+[CreateAssetMenu(menuName = "Abilities/SimpleAttack")]
+public class Ability_SimpleMelee : Ability
 {
 
     [SerializeField]

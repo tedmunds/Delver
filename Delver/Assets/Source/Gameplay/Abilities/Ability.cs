@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Attacks/Attack")]
-public class Attack : ScriptableObject
+[CreateAssetMenu(menuName = "Abilities/Ability")]
+public class Ability : ScriptableObject
 {
     // The total time the attack takes over control to perform its actions
     [SerializeField]

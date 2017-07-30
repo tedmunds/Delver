@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "Attacks/HealAbility")]
-public class Attack_HealOther : Attack
+[CreateAssetMenu(menuName = "Abilities/HealAbility")]
+public class Ability_HealOther : Ability
 {
 
     [SerializeField]

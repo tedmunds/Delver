@@ -130,12 +130,13 @@ public class PlayerControllerSmooth : ControlStateMachine
         animator = GetComponent<Animator>();
         attacker = GetComponent<Attacker>();
         characterMover = GetComponent<CharacterMover>();
-
+        
         world = TileWorldManager.instance;
 
         targetIcon = Instantiate(targetIconPrototype);
         targetIcon.SetActive(false);
     }
+    
 
     protected void OnEnable()
     {
@@ -298,7 +299,7 @@ public class PlayerControllerSmooth : ControlStateMachine
         characterMover.SetControlInput(Vector3.zero);
 
         // Starts the attack sequence that handles damage etc.
-        Attack attacktoPerform = attacker.GetBaseAttack();
+        Ability attacktoPerform = attacker.GetBaseAttack();
         // Attack in cardinal directions inly, use the last known direction, in case an input is not currently pressed
         Vector2 attackDirection = GetAttackDirection();
 

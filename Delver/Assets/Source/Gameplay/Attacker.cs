@@ -8,7 +8,7 @@ public class Attacker : MonoBehaviour
     public delegate void AttackFinishedCallback();
     
     [SerializeField]
-    private Attack baseAttack;
+    private Ability baseAttack;
     
     private Actor owner;
 
@@ -18,11 +18,11 @@ public class Attacker : MonoBehaviour
     private bool isPerformingAttack;
 
     // Instance of the attack being prformed
-    private Attack currentAttack;
+    private Ability currentAttack;
 
     private TileWorldManager world;
 
-    public Attack GetBaseAttack() { return baseAttack; }
+    public Ability GetBaseAttack() { return baseAttack; }
 
     public void Start()
     {
@@ -48,14 +48,14 @@ public class Attacker : MonoBehaviour
     /// <summary>
     /// Initiates the attack, performing its actions
     /// </summary>
-    public bool StartAttack(Attack attackToPerform, Vector3 direction, AttackFinishedCallback callback)
+    public bool StartAttack(Ability attackToPerform, Vector3 direction, AttackFinishedCallback callback)
     {
         if(!baseAttack || !attackToPerform)
         {
             return false;
         }
         
-        currentAttack = ScriptableObject.Instantiate<Attack>(attackToPerform);
+        currentAttack = ScriptableObject.Instantiate<Ability>(attackToPerform);
         currentAttack.AttackStarted(owner, transform.position, direction);
 
         lastAttackStartedTime = Time.time;

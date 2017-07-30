@@ -238,7 +238,7 @@ public class PlayerController : ControlStateMachine
         bDisableAttack = true;
 
         // Starts the attack sequence that handles damage etc.
-        Attack attacktoPerform = attacker.GetBaseAttack();
+        Ability attacktoPerform = attacker.GetBaseAttack();
         // Attack in cardinal directions inly, use the last known direction, in case an input is not currently pressed
         Vector2 attackDirection = characterMover.GetDominantDirection(lastInputDirection);
         

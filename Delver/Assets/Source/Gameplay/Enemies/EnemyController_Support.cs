@@ -7,7 +7,7 @@ public class EnemyController_Support : EnemyController
     protected const string STATE_HEALING = "Healing";
 
     [SerializeField]
-    protected Attack healingAttack;
+    protected Ability healingAbility;
 
     protected float lastHealTime;
 
@@ -60,7 +60,7 @@ public class EnemyController_Support : EnemyController
 
         Vector3 toTarget = (chosenTarget.transform.position - transform.position).normalized;
 
-        attacker.StartAttack(healingAttack, toTarget, HealAbilityDone);
+        attacker.StartAttack(healingAbility, toTarget, HealAbilityDone);
 
         animator.SetTrigger("Attack");
     }
@@ -81,7 +81,7 @@ public class EnemyController_Support : EnemyController
 
     protected bool CanPerformHeal()
     {
-        return (Time.time - lastHealTime > healingAttack.cooldown);
+        return (Time.time - lastHealTime > healingAbility.cooldown);
     }
 
     
