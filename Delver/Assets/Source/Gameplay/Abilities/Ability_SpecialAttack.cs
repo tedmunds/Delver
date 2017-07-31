@@ -43,6 +43,7 @@ public class Ability_SpecialAttack : Ability
 
         // Spawn first layer immediately
         SpawnColliderLayer(0);
+        lastLayerTime = Time.time;
 
         // Spawn the rest immediatly too
         if(dalayBetweenLayers <= 0.0f)
