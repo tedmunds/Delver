@@ -25,24 +25,28 @@ public class Ability : ScriptableObject
     [SerializeField]
     public float idealRange;
 
-    protected Actor attacker;
+    protected Actor abilityUser;
 
-    protected Vector3 attackPosition;
-    protected Vector3 attackDirection;
+    protected Vector3 activatedPosition;
+    protected Vector3 activatedDirection;
 
-    public virtual void AttackStarted(Actor attacker, Vector3 position, Vector3 direction)
+    protected float activatedTime;
+
+    public virtual void AbilityStarted(Actor abilityUser, Vector3 position, Vector3 direction)
     {
-        this.attacker = attacker;
-        attackPosition = position;
-        attackDirection = direction.normalized;
+        this.abilityUser = abilityUser;
+        activatedPosition = position;
+        activatedDirection = direction.normalized;
+
+        activatedTime = Time.time;
     }
 
-    public virtual void UpdateAttack(Actor attacker)
+    public virtual void UpdateAbility(Actor abilityUser)
     {
 
     }
 
-    public virtual void AttackEnded(Actor attacker)
+    public virtual void AbilityEnded(Actor abilityUser)
     {
 
     }

@@ -19,44 +19,61 @@ public class Ability_SimpleMelee : Ability
     private AttackCollider currentCollider;
     private bool stopMovement;
 
-    public override void AttackStarted(Actor attacker, Vector3 position, Vector3 direction)
+    public override void AbilityStarted(Actor abilityUser, Vector3 position, Vector3 direction)
     {
-        base.AttackStarted(attacker, position, direction);
+        base.AbilityStarted(abilityUser, position, direction);
         
         currentCollider = ObjectPool.GetActive(colliderType, position, Quaternion.Euler(0.0f, 0.0f, Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x)));
-        currentCollider.InitFromAttack(attacker, OnHit, ValidateHit);
+        currentCollider.InitFromAttack(abilityUser, OnHit, ValidateHit);
     }
 
-    public override void UpdateAttack(Actor attacker)
+    public override void UpdateAbility(Actor abilityUser)
     {
-        base.UpdateAttack(attacker);
+        base.UpdateAbility(abilityUser);
 
-        if(!stopMovement && (currentCollider.transform.position - attackPosition).sqrMagnitude < (maxRange * maxRange))
+        if(currentCollider != null)
         {
-            currentCollider.transform.position += attackDirection * colliderSpeed * Time.deltaTime;
-        }
-        else
-        {
-            currentCollider.transform.position = attackPosition + attackDirection * maxRange;
-            stopMovement = true;
+            if(!stopMovement && (currentCollider.transform.position - activatedPosition).sqrMagnitude < (maxRange * maxRange))
+            {
+                currentCollider.transform.position += activatedDirection * colliderSpeed * Time.deltaTime;
+            }
+            else
+            {
+                currentCollider.transform.position = activatedPosition + activatedDirection * maxRange;
+                RemoveAttackCollider();
+            }
         }
     }
 
-    public override void AttackEnded(Actor attacker)
+    public override void AbilityEnded(Actor abilityUser)
     {
-        base.AttackEnded(attacker);
+        base.AbilityEnded(abilityUser);
 
-        currentCollider.gameObject.SetActive(false);
+        if(currentCollider != null)
+        {
+            RemoveAttackCollider();
+        }        
     }
 
-    public void OnHit(Actor hit)
+    public virtual void OnHit(Actor hit)
     {
         hit.TakeDamage(damage);
     }
 
-    protected bool ValidateHit(Actor hit)
+    protected virtual bool ValidateHit(Actor hit)
     {
-        return hit.teamNumber != attacker.teamNumber;
+        return hit.teamNumber != abilityUser.teamNumber;
+    }
+
+    protected void RemoveAttackCollider()
+    {
+        if(currentCollider != null)
+        {
+            currentCollider.gameObject.SetActive(false);
+            currentCollider = null;
+        }
+        
+        stopMovement = true;
     }
 
 }

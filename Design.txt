@@ -180,6 +180,44 @@
 	interesting
 
 
+- Looking At Design Holistically
+	- Kill boss = Demon Skull
+	- The more skulls you carry the lower your max health is
+	- At any time in the dungeon you can flee back to the surface, loosing progress on your current run
+	but saving all your items and gold
+	- You can spend gold on more health potions and buying items / trinkets from the merchents
+	- If you die in the dungeon you loose everything you are carrying
+	- Returning to the surface adds the gold you collected to the total gold, that is not lost on death	
+	- Carrying Skulls also increases drop rate of items from enemies
+	
+	- You can alternatively trade in Skulls on the surface to level up the merchants by granting them favour
+	- Higher level merchants will have better items
+		- Potion seller will unlock higher max carried potions
+
+	- Alternatively you can add the skull to the skull pile as a sort of end game thing?
+		- Could be as dumb as "Build a pile of skulls up to the sky to kill the god that cursed the town"
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

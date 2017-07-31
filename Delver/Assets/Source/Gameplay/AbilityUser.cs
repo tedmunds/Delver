@@ -40,7 +40,7 @@ public class AbilityUser : MonoBehaviour
             }
             else
             {
-                currentAttack.UpdateAttack(owner);
+                currentAttack.UpdateAbility(owner);
             }
         }
 	}
@@ -56,7 +56,7 @@ public class AbilityUser : MonoBehaviour
         }
         
         currentAttack = ScriptableObject.Instantiate<Ability>(attackToPerform);
-        currentAttack.AttackStarted(owner, transform.position, direction);
+        currentAttack.AbilityStarted(owner, transform.position, direction);
 
         lastAttackStartedTime = Time.time;
         onFinishedCallback = callback;
@@ -75,7 +75,7 @@ public class AbilityUser : MonoBehaviour
 
         isPerformingAttack = false;
 
-        currentAttack.AttackEnded(owner);
+        currentAttack.AbilityEnded(owner);
         Destroy(currentAttack);
         currentAttack = null;
     }

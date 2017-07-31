@@ -26,10 +26,9 @@
 > Enemy attack mode support
 
 7/30/17
-- Rename attack system to ability or something, so heal attack doesnt seem so weird
-
-- Support enemy attack cooldowns
-- refactor base attack to remove duplicate code
+> Rename attack system to ability or something, so heal attack doesnt seem so weird
+> Support enemy attack cooldowns
+> refactor base attack to remove duplicate code
 
 - Special ability attack with multiple affected tiles (do effect in a line of X tiles)
 - Special attack in radius around position
