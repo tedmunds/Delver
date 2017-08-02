@@ -149,7 +149,7 @@ public class EnemyController : ControlStateMachine
     {
         StopMovement();
 
-        abilities.StartAttack(abilities.GetBaseAttack(), GetAttackDirection(), EndAttack);
+        abilities.StartAbility(abilities.GetBaseAttack(), GetAttackDirection(), EndAttack, null);
 
         animator.SetTrigger("Attack");
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Base for attacks that place peristent tiles in the world
 /// </summary>
+[CreateAssetMenu(menuName = "Abilities/SpecialAttack")]
 public class Ability_SpecialAttack : Ability
 {
     protected struct ColliderEntry
@@ -31,6 +32,9 @@ public class Ability_SpecialAttack : Ability
     /// </summary>
     [SerializeField]
     protected float colliderLifetime;
+
+    [SerializeField]
+    protected AttackPattern attackPattern;
 
     protected List<ColliderEntry> colliders = new List<ColliderEntry>();
 
@@ -60,7 +64,7 @@ public class Ability_SpecialAttack : Ability
         base.UpdateAbility(attacker);
         
         // Check if a new layer of colliders should be spawned
-        if(dalayBetweenLayers > 0.0f && Time.time - lastLayerTime > dalayBetweenLayers)
+        if(dalayBetweenLayers > 0.0f && Time.time - lastLayerTime > dalayBetweenLayers && currentLayerNum < numLayers - 1)
         {
             lastLayerTime = Time.time;
             currentLayerNum += 1;
@@ -99,7 +103,7 @@ public class Ability_SpecialAttack : Ability
     protected void SpawnColliderLayer(int layer)
     {
         // Grab all the locations to use, determined by subclasses
-        Vector3[] spawnLocations = GetColliderSpawnLocations(colliderType.GetComponent<BoxCollider2D>().size, layer);
+        Vector3[] spawnLocations = attackPattern.GetColliderSpawnLocations(this, colliderType.GetComponent<BoxCollider2D>().size, layer);
         foreach(Vector3 loc in spawnLocations)
         {
             ColliderEntry newEntry = new ColliderEntry()
@@ -113,15 +117,7 @@ public class Ability_SpecialAttack : Ability
         }
     }
 
-    /// <summary>
-    /// Returns a list of where to place new colliders for this attack. Different patterns willbe formed here
-    /// </summary>
-    protected virtual Vector3[] GetColliderSpawnLocations(Vector3 colliderBounds, int layer)
-    {
-        // TODO: subclasses to implement different patterns
-        return new Vector3[] { };
-    } 
-
+   
 
     protected virtual void OnColliderEnter(Actor hit)
     {

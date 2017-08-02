@@ -184,7 +184,7 @@ public class PlayerControllerSmooth : ControlStateMachine
         float currentSpeed = currentVelocity.magnitude;
         
         // Handle attack input, from any state assuming they dont cancel the ability
-        if(Input.GetButtonDown(InputAction_Attack))
+        if(Input.GetButtonDown(InputAction_Attack) && CanPerformAttack(attacker.GetBaseAttack()))
         {
             if(!bDisableAttack)
             {
@@ -304,7 +304,7 @@ public class PlayerControllerSmooth : ControlStateMachine
         Vector2 attackDirection = GetAttackDirection();
 
         // Returns true only if the attack was valid
-        bool bPerformedAttack = attacker.StartAttack(attacktoPerform, attackDirection, AttackFinished);
+        bool bPerformedAttack = attacker.StartAbility(attacktoPerform, attackDirection, ResumeMovement, AttackFinished);
         if(bPerformedAttack)
         {
             // each attack can use up some energy too
@@ -327,7 +327,7 @@ public class PlayerControllerSmooth : ControlStateMachine
         }
     }
 
-    protected void AttackFinished()
+    protected void ResumeMovement()
     {
         // Check for pending states at the end of an attack, like another attack or a roll. Otherwise just go back to walking
         if(!CheckPendingInput())
@@ -336,10 +336,14 @@ public class PlayerControllerSmooth : ControlStateMachine
         }
     }
 
+    protected void AttackFinished()
+    {
+        bDisableAttack = false;
+    }
+
     public void OnExit_Attack()
     {
-        attackEndedTime = Time.time;
-        bDisableAttack = false;
+        attackEndedTime = Time.time;        
     }
 
 
@@ -415,6 +419,11 @@ public class PlayerControllerSmooth : ControlStateMachine
         }
 
         return true;
+    }
+
+    protected bool CanPerformAttack(Ability attack)
+    {
+        return GetCurrentEnergy() > 0.0f;
     }
 
     // Sets up an input event to be consumed when entering a base state

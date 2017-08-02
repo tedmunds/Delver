@@ -9,6 +9,9 @@ public class Ability : ScriptableObject
     [SerializeField]
     public float totalTime;
 
+    [SerializeField]
+    public float lockMovementTime;
+
     // How long until the attack can be used again
     [SerializeField]
     public float cooldown;
@@ -27,8 +30,8 @@ public class Ability : ScriptableObject
 
     protected Actor abilityUser;
 
-    protected Vector3 activatedPosition;
-    protected Vector3 activatedDirection;
+    public Vector3 activatedPosition { get; private set; }
+    public Vector3 activatedDirection { get; private set; }
 
     protected float activatedTime;
 

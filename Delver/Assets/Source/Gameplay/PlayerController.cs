@@ -243,7 +243,7 @@ public class PlayerController : ControlStateMachine
         Vector2 attackDirection = characterMover.GetDominantDirection(lastInputDirection);
         
         // Returns true only if the attack was valid
-        bool bPerformedAttack = attacker.StartAttack(attacktoPerform, attackDirection, AttackFinished);
+        bool bPerformedAttack = attacker.StartAbility(attacktoPerform, attackDirection, AttackFinished, null);
         if(bPerformedAttack)
         {
             // each attack can use up some energy too
