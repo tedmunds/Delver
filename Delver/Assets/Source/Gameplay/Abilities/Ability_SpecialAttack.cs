@@ -112,7 +112,7 @@ public class Ability_SpecialAttack : Ability
                 addedTime = Time.time
             };
 
-            newEntry.spawnedCollider.InitFromAttack(abilityUser, OnColliderEnter, OnColliderExit, ValidateHit);
+            newEntry.spawnedCollider.InitFromAttack(abilityUser, OnColliderEnter, OnColliderExit, ValidateHit, this.activatedDirection, this.colliderSpeed);
             colliders.Add(newEntry);
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class AttackCollider : MonoBehaviour
+public class AttackCollider : Actor
 {
     public delegate void OverlapEvent(Actor actor);
     public delegate bool CanHitTarget(Actor target);
@@ -21,25 +21,32 @@ public class AttackCollider : MonoBehaviour
     protected Collider2D[] overlapsThisFrame;
 
     public Vector3 GetBounds() { return boxDefinition.size; }
-    
 
-    protected void OnEnable()
+    public float speed = 0;
+    public Vector3 activatedDirection { get; private set; }
+
+    protected override void OnEnable()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        invincible = true;
+
         hitsThisLifetime.Clear();
         overlapsThisFrame = null;
     }
 
 
-	protected virtual void Update()
+	protected override void Update()
 	{
         float angle = transform.rotation.eulerAngles.z;
         overlapsThisFrame = Physics2D.OverlapBoxAll(transform.position, boxDefinition.size, angle, detectLayers);
-        foreach(Collider2D overlap in overlapsThisFrame)
+        this.transform.position += this.activatedDirection * this.speed * Time.deltaTime;
+
+        foreach (Collider2D overlap in overlapsThisFrame)
         {
-            // Only hit each thin once
+            // Only hit each thing once
             Actor hit = overlap.gameObject.GetComponent<Actor>();
             if (hit != null && 
-                hit != owner && 
+                hit.teamNumber != this.teamNumber && 
                 !hitsThisLifetime.Contains(hit) &&
                 ShouldOverlapTarget(hit))
             {
@@ -50,15 +57,17 @@ public class AttackCollider : MonoBehaviour
 	}
 
     /// <summary>
-    /// Call to register a callback to receive overlap events to a specific function
+    /// Call to register a callback to receive overlap events to a specific function, set the collider's initial direction and speed
     /// </summary>
-    public void InitFromAttack(Actor owner, OverlapEvent callback, CanHitTarget targetValidation)
+    public void InitFromAttack(Actor owner, OverlapEvent callback, CanHitTarget targetValidation, Vector3 activatedDirection, float speed)
     {
         boxDefinition = GetComponent<BoxCollider2D>();
 
         onOverlap = callback;
         validateTarget = targetValidation;
         this.owner = owner;
+        this.activatedDirection = activatedDirection;
+        this.speed = speed;
     }
 
 
@@ -72,4 +81,13 @@ public class AttackCollider : MonoBehaviour
         return true;
     }
 
+
+    /// <summary>
+    /// Reflect the current activated direction for the collider, give it a new team number for the "reflector" of the attack
+    /// </summary>
+    public override void Reflect(Actor reflector)
+    {
+        this.activatedDirection = Vector3.Reflect(this.activatedDirection, this.activatedDirection);
+        this.teamNumber = reflector.teamNumber;
+    }
 }

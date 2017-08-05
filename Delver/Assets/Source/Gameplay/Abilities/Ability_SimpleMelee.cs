@@ -9,14 +9,12 @@ public class Ability_SimpleMelee : Ability
     [SerializeField]
     public AttackCollider colliderType;
 
-    [SerializeField]
-    public float colliderSpeed = 3.0f;
 
     [SerializeField]
     public float maxRange = 1.0f;
 
 
-    private AttackCollider currentCollider;
+    protected AttackCollider currentCollider;
     private bool stopMovement;
 
     public override void AbilityStarted(Actor abilityUser, Vector3 position, Vector3 direction)
@@ -24,7 +22,8 @@ public class Ability_SimpleMelee : Ability
         base.AbilityStarted(abilityUser, position, direction);
         
         currentCollider = ObjectPool.GetActive(colliderType, position, Quaternion.Euler(0.0f, 0.0f, Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x)));
-        currentCollider.InitFromAttack(abilityUser, OnHit, ValidateHit);
+        currentCollider.InitFromAttack(abilityUser, OnHit, ValidateHit, direction, colliderSpeed);
+        currentCollider.teamNumber = this.abilityUser.teamNumber;
     }
 
     public override void UpdateAbility(Actor abilityUser)
@@ -33,11 +32,7 @@ public class Ability_SimpleMelee : Ability
 
         if(currentCollider != null)
         {
-            if(!stopMovement && (currentCollider.transform.position - activatedPosition).sqrMagnitude < (maxRange * maxRange))
-            {
-                currentCollider.transform.position += activatedDirection * colliderSpeed * Time.deltaTime;
-            }
-            else
+            if (stopMovement && (currentCollider.transform.position - activatedPosition).sqrMagnitude < (maxRange * maxRange))
             {
                 currentCollider.transform.position = activatedPosition + activatedDirection * maxRange;
                 RemoveAttackCollider();
@@ -62,7 +57,7 @@ public class Ability_SimpleMelee : Ability
 
     protected virtual bool ValidateHit(Actor hit)
     {
-        return hit.teamNumber != abilityUser.teamNumber;
+        return hit.teamNumber != currentCollider.teamNumber;
     }
 
     protected void RemoveAttackCollider()

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 /// <summary>
 /// Like attack colliders except meant to be longer lasting and apply effects to things that are overlaping them
 /// </summary>
@@ -11,9 +13,10 @@ public class WorldEffectCollider : AttackCollider
     private OverlapEvent endOverlapEvent;
 
 
-    public void InitFromAttack(Actor owner, OverlapEvent startOverlapCallback, OverlapEvent endOverlapCallback, CanHitTarget targetValidation)
+    public void InitFromAttack(Actor owner, OverlapEvent startOverlapCallback, OverlapEvent endOverlapCallback, CanHitTarget targetValidation,
+        Vector3 activatedDirection, float speed)
     {
-        InitFromAttack(owner, startOverlapCallback, targetValidation);
+        base.InitFromAttack(owner, startOverlapCallback, targetValidation, activatedDirection, speed);
         endOverlapEvent = endOverlapCallback;
     }
 
