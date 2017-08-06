@@ -22,12 +22,14 @@ public class AttackCollider : Actor
 
     public Vector3 GetBounds() { return boxDefinition.size; }
 
+    [HideInInspector]
     public float speed = 0;
+    [HideInInspector]
     public Vector3 activatedDirection { get; private set; }
 
     protected override void OnEnable()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        base.OnEnable();
         invincible = true;
 
         hitsThisLifetime.Clear();
@@ -37,9 +39,10 @@ public class AttackCollider : Actor
 
 	protected override void Update()
 	{
+        base.Update();
         float angle = transform.rotation.eulerAngles.z;
         overlapsThisFrame = Physics2D.OverlapBoxAll(transform.position, boxDefinition.size, angle, detectLayers);
-        this.transform.position += this.activatedDirection * this.speed * Time.deltaTime;
+        transform.position += activatedDirection * speed * Time.deltaTime;
 
         foreach (Collider2D overlap in overlapsThisFrame)
         {

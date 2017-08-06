@@ -36,7 +36,7 @@ public class AbilityUser : MonoBehaviour
 	{
 		if(isPerformingAttack)
         {
-            // Check if it should notify aboyut control being returned
+            // Check if it should notify about control being returned
             if(hasControl && Time.time > lastAttackStartedTime + currentAttack.lockMovementTime)
             {
                 hasControl = false;
