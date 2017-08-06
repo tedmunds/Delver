@@ -30,9 +30,10 @@
 > Support enemy attack cooldowns
 > refactor base attack to remove duplicate code
 
-- Special ability attack with multiple affected tiles (do effect in a line of X tiles)
-- Special attack in radius around position
-- Special attack cross shape in X tiles
+8/217
+> Special ability attack with multiple affected tiles (do effect in a line of X tiles)
+> Special attack in radius around position
+> Special attack cross shape in X tiles
 
 - Multiple exits to rooms within dungeon, in simple layouts
 - Dungeon room layout randomization

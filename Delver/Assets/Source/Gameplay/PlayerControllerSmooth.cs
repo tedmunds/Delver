@@ -6,13 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(AbilityUser))]
 [RequireComponent(typeof(CharacterMover))]
+[RequireComponent(typeof(Inventory))]
 public class PlayerControllerSmooth : ControlStateMachine
 {
     private const string STATE_WALKING = "Walking";
     private const string STATE_ROLLING = "Rolling";
     private const string STATE_KNOCKDOWN = "Knockdown";
     private const string STATE_ATTACK = "Attack";
+    private const string STATE_SPECIAL = "Special";
 
+    // Tracks an input that would have been made but was blocked for some reason. Can be consumed at a later time to perform the specified action
     private struct PendingInput
     {
         public string stateChange;
@@ -22,11 +25,20 @@ public class PlayerControllerSmooth : ControlStateMachine
         public bool isPending;
     }
 
+    // Used to indicate that there is some system overriding the base input direction 
     private struct ControlDirectionOverride
     {
         public bool pending;
         public Vector3 controlOverride;
     }
+
+    // Tracks how the player is using their weapon and determines which base attack index to use next
+    private struct AttackCombo
+    {
+        public float lastComboTime;
+        public int currentComboIndex;
+    }
+
 
 
     #region input_bindings
@@ -43,12 +55,15 @@ public class PlayerControllerSmooth : ControlStateMachine
     private string InputAction_Attack = "Fire1";
 
     [SerializeField]
+    private string InputAction_SpecialAttack = "Fire2";
+
+    [SerializeField]
     private string InputAction_ChangeTarget = "Target";
 
     [SerializeField]
     private float maxInputQueueTime = 0.5f;
     #endregion
-    
+
     #region roll_params
     [SerializeField]
     private int rollDistance = 3;
@@ -82,11 +97,17 @@ public class PlayerControllerSmooth : ControlStateMachine
     private float maxTargetRange = 4.0f;
     #endregion
 
+    #region combo_params
+    [SerializeField]
+    private float maxComboInputDelay = 0.5f;
+    #endregion
+
 
     private Actor actor;
     private Animator animator;
     private AbilityUser attacker;
     private CharacterMover characterMover;
+    private Inventory inventory;
 
     // Pending input is an input made during a state that doesnt allow that change to happen until the state exits
     private PendingInput pendingInput;
@@ -96,7 +117,7 @@ public class PlayerControllerSmooth : ControlStateMachine
     private ModifierContainer modifierContainer;
 
     // Cahce ref to world
-    private TileWorldManager world;
+    public TileWorldManager world { get; private set; }
 
     // Traks the last non-zero input direction
     Vector2 lastInputDirection;
@@ -116,6 +137,9 @@ public class PlayerControllerSmooth : ControlStateMachine
     private List<Actor> previousTargets = new List<Actor>();
     private GameObject targetIcon;
 
+    // The current attack combo data
+    private AttackCombo attackComboState;
+
     // Get / Set
     public float GetEnergyPercent() { return currentEnergy / baseEnergy; }
     public float GetCurrentEnergy() { return currentEnergy; }
@@ -130,13 +154,14 @@ public class PlayerControllerSmooth : ControlStateMachine
         animator = GetComponent<Animator>();
         attacker = GetComponent<AbilityUser>();
         characterMover = GetComponent<CharacterMover>();
-        
+        inventory = GetComponent<Inventory>();
+
         world = TileWorldManager.instance;
 
         targetIcon = Instantiate(targetIconPrototype);
         targetIcon.SetActive(false);
     }
-    
+
 
     protected void OnEnable()
     {
@@ -182,9 +207,9 @@ public class PlayerControllerSmooth : ControlStateMachine
 
         Vector3 currentVelocity = characterMover.GetVelocity();
         float currentSpeed = currentVelocity.magnitude;
-        
+
         // Handle attack input, from any state assuming they dont cancel the ability
-        if(Input.GetButtonDown(InputAction_Attack) && CanPerformAttack(attacker.GetBaseAttack()))
+        if(Input.GetButtonDown(InputAction_Attack) && CanPerformAttack(inventory.GetBaseAttack(attackComboState.currentComboIndex)))
         {
             if(!bDisableAttack)
             {
@@ -193,6 +218,19 @@ public class PlayerControllerSmooth : ControlStateMachine
             else
             {
                 MakePendingInput(STATE_ATTACK);
+            }
+        }
+
+        // special attack intput, smae conditionas as base attack
+        if(Input.GetButtonDown(InputAction_SpecialAttack) && CanPerformAttack(inventory.GetSpecialAttack()))
+        {
+            if(!bDisableAttack)
+            {
+                GotoState(STATE_SPECIAL, false);
+            }
+            else
+            {
+                MakePendingInput(STATE_SPECIAL);
             }
         }
 
@@ -237,7 +275,7 @@ public class PlayerControllerSmooth : ControlStateMachine
     {
         // consume the energy now, as the amount has been verified
         ConsumeEnergy(energyPerRoll);
-        
+
         // how long it will take to cover the distance at this speed, used to set timer to end roll state
         float rollTime = rollDistance / rollSpeed;
 
@@ -294,29 +332,29 @@ public class PlayerControllerSmooth : ControlStateMachine
 
     public void OnEnter_Attack()
     {
-        bDisableAttack = true;
-
-        characterMover.SetControlInput(Vector3.zero);
-
-        // Starts the attack sequence that handles damage etc.
-        Ability attacktoPerform = attacker.GetBaseAttack();
-        // Attack in cardinal directions inly, use the last known direction, in case an input is not currently pressed
-        Vector2 attackDirection = GetAttackDirection();
-
-        // Returns true only if the attack was valid
-        bool bPerformedAttack = attacker.StartAbility(attacktoPerform, attackDirection, ResumeMovement, AttackFinished);
-        if(bPerformedAttack)
+        // Check if the current combo is stale and should just be reset
+        float currentTime = Time.time;
+        float lastAttackDelta = currentTime - attackComboState.lastComboTime;
+        if(lastAttackDelta > maxComboInputDelay)
         {
-            // each attack can use up some energy too
-            ConsumeEnergy(attacktoPerform.energyConsumption);
-        }
-        else
-        {
-            // just go back to walking
-            GotoState(STATE_WALKING);
+            attackComboState.currentComboIndex = 0;
         }
 
-        animator.SetTrigger("Attack");
+        bool performedAttack = StartNewAttack(inventory.GetBaseAttack(attackComboState.currentComboIndex));
+        if(performedAttack)
+        {
+            // should try and increment the combo again, looping back to beginning of array on overflow
+            attackComboState.lastComboTime = currentTime;
+
+            if(attackComboState.currentComboIndex + 1 >= inventory.WeaponComboLength())
+            {
+                attackComboState.currentComboIndex = 0;
+            }
+            else
+            {
+                attackComboState.currentComboIndex += 1;
+            }
+        }
     }
 
     protected void Update_Attack()
@@ -327,23 +365,28 @@ public class PlayerControllerSmooth : ControlStateMachine
         }
     }
 
-    protected void ResumeMovement()
+    public void OnExit_Attack()
     {
-        // Check for pending states at the end of an attack, like another attack or a roll. Otherwise just go back to walking
-        if(!CheckPendingInput())
+        attackEndedTime = Time.time;
+    }
+
+
+    public void OnEnter_Special()
+    {
+        StartNewAttack(inventory.GetSpecialAttack());
+    }
+
+    protected void Update_Special()
+    {
+        if(CanDoEvadeRoll(PeekControlInput()) && Input.GetButtonDown(InputAction_Roll))
         {
-            GotoState(STATE_WALKING);
+            MakePendingInput(STATE_ROLLING);
         }
     }
 
-    protected void AttackFinished()
+    public void OnExit_Special()
     {
-        bDisableAttack = false;
-    }
-
-    public void OnExit_Attack()
-    {
-        attackEndedTime = Time.time;        
+        attackEndedTime = Time.time;
     }
 
 
@@ -371,6 +414,60 @@ public class PlayerControllerSmooth : ControlStateMachine
 
         return PeekControlInput();
     }
+
+
+    protected bool StartNewAttack(Ability attackAbility)
+    {
+        bool performedAttack = false;
+
+        // Define a little funcntionn for returnning to walking at the end of attack
+        AbilityUser.AbilityFinishedCallback AttackResumeMove = () =>
+        {
+            // Check for pending states at the end of an attack, like another attack or a roll. Otherwise just go back to walking
+            if(!CheckPendingInput())
+            {
+                GotoState(STATE_WALKING);
+            }
+        };
+
+        // Corresponding callback for when the attack is completely done
+        AbilityUser.AbilityFinishedCallback AttackCompleted = () =>
+        {
+            bDisableAttack = false;
+        };
+
+        // Safety check, defaults to returning control
+        if(attackAbility == null)
+        {
+            GotoState(STATE_WALKING);
+        }
+
+        bDisableAttack = true;
+
+        characterMover.SetControlInput(Vector3.zero);
+
+        // use the last known direction, in case an input is not currently pressed
+        Vector2 attackDirection = GetAttackDirection();
+
+        // Returns true only if the attack was valid
+        performedAttack = attacker.StartAbility(attackAbility, attackDirection, AttackResumeMove, AttackCompleted);
+        if(performedAttack)
+        {
+            // each attack can use up some energy too
+            ConsumeEnergy(attackAbility.energyConsumption);
+        }
+        else
+        {
+            // just go back to walking
+            GotoState(STATE_WALKING);
+        }
+
+        animator.SetTrigger("Attack");
+
+        return performedAttack;
+    }
+
+
 
     // checks the control input in a const way
     public Vector3 PeekControlInput()
@@ -462,12 +559,12 @@ public class PlayerControllerSmooth : ControlStateMachine
         float bestDistSqr = Mathf.Infinity;
         Actor bestNewTarget = null;
         foreach(GameObject other in world.AllEntities(ignore: gameObject))
-        {            
+        {
             Actor a = other.GetComponent<Actor>();
             if(a != null && !previousTargets.Contains(a))
             {
                 float distSqr = (transform.position - a.transform.position).sqrMagnitude;
-                
+
                 // and only consider targets within the range, this will allow targets to be cycled within this range automatically
                 if(distSqr < bestDistSqr && distSqr < (maxTargetRange * maxTargetRange))
                 {
@@ -485,11 +582,11 @@ public class PlayerControllerSmooth : ControlStateMachine
         }
         else // used up all potentials so reset and cycle again
         {
-            ClearCurrentTarget();           
+            ClearCurrentTarget();
         }
     }
 
-    
+
     public void ClearCurrentTarget()
     {
         previousTargets.Clear();
@@ -517,4 +614,24 @@ public class PlayerControllerSmooth : ControlStateMachine
 
         return outDirection;
     }
+
+    /// <summary>
+    /// Called from inventory when a new weapon is equipped
+    /// </summary>
+    public void WeaponEquipped(Weapon newWeapon)
+    {
+        Debug.Log("New weapon equipped [" + newWeapon.itemName + "]");
+
+        // TODO: apply modifiers and stuff
+    }
+
+
+    public void WeaponUnEquipped(Weapon oldWeapon)
+    {
+        Debug.Log("Weapon unequipped [" + oldWeapon.itemName + "]");
+
+        // TODO: remove modifiers and stuff
+    }
+
+
 }

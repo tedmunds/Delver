@@ -20,6 +20,9 @@ public class TileWorldManager : MonoBehaviour
     [SerializeField]
     private GameObject playerPrototype;
 
+    [SerializeField]
+    private DroppedItem droppedItemPrototype;
+
     // TODO: Make door procedural with the floor layout so they are spcially sensical
     [SerializeField]
     private DungeonDoor exitDoor;
@@ -142,6 +145,18 @@ public class TileWorldManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Crates a dropped item object from the input item at the location
+    /// </summary>
+    public void DropItemAtLocation(Item itemToDrop, Vector3 location)
+    {
+        DroppedItem worldDrop = Instantiate(droppedItemPrototype, location, Quaternion.identity);
+        if(worldDrop != null)
+        {
+            worldDrop.DropItem(itemToDrop);
+        }
     }
 
     // Called when all enemies spawned are killed
