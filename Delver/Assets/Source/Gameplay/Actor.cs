@@ -33,6 +33,10 @@ public class Actor : MonoBehaviour
     protected bool invincible;
     protected bool isDead;
 
+    protected ModifierContainer modifierContainer;
+
+    protected float speedModifier = 1;
+
     protected SpriteRenderer spriteRenderer;
     private TileWorldManager world;
 
@@ -42,7 +46,9 @@ public class Actor : MonoBehaviour
     public void SetInvincible(bool newInvincible) { invincible = newInvincible; }
     public float GetHealthPercent() { return currentHealth / baseHealth; }
     public float GetCurrentHealth() { return currentHealth; }
-    public float GetBaseHealth() { return baseHealth; }    
+    public float GetBaseHealth() { return baseHealth; }
+    public ModifierContainer GetModifierContainer() { return modifierContainer; }
+    public float GetSpeedModifier() { return speedModifier; }
 
     public Facing GetFacing() { return facing; }
 
@@ -53,6 +59,7 @@ public class Actor : MonoBehaviour
         
         invincible = false;
         currentHealth = baseHealth;
+        modifierContainer = new ModifierContainer();
     }
     
     protected void Start()
@@ -63,7 +70,9 @@ public class Actor : MonoBehaviour
 	
 	protected virtual void Update()
 	{
-		
+        TakeDamage(modifierContainer.GetModifierValue(ModifierTarget.Health));
+        CalculateMoveSpeed();
+        modifierContainer.UpdateModifiers(Time.time);
 	}
 
 
@@ -73,8 +82,14 @@ public class Actor : MonoBehaviour
         return new Vector3(0.0f, spriteRenderer.bounds.size.y / 2.0f, 0.0f);
     }
 
+    //Calculate move speed
+    public void CalculateMoveSpeed()
+    {
+        speedModifier = modifierContainer.GetModifierValue(ModifierTarget.MoveSpeed);
+        Debug.Log(speedModifier);
+    }
 
-    // Apply the damage to the actor generical,y calling Died() when health hits 0
+    // Apply the damage to the actor generically calling Died() when health hits 0
     public void TakeDamage(float baseDamage)
     {
         if(invincible || isDead)

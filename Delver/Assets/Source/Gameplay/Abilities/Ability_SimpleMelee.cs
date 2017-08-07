@@ -52,6 +52,13 @@ public class Ability_SimpleMelee : Ability
 
     public virtual void OnHit(Actor hit)
     {
+        if (modifiers != null)
+        {
+            foreach(BaseModifier modifier in modifiers)
+            {
+                hit.GetModifierContainer().AddModifer(modifier.target, modifier.getModifier());
+            }
+        }
         hit.TakeDamage(damage);
     }
 

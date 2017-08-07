@@ -31,6 +31,9 @@ public class Ability : ScriptableObject
     [SerializeField]
     public float colliderSpeed = 3.0f;
 
+    [SerializeField]
+    public BaseModifier[] modifiers;
+
     protected Actor abilityUser;
 
     public Vector3 activatedPosition { get; private set; }

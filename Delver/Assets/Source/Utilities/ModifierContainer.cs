@@ -49,7 +49,7 @@ public class ModifierContainer
         // Used to easily compare modifiers, instead of full strings
         private int tag;
 
-        // Init th emodifier, with Time.time to indicate when it was initialy created
+        // Init the modifier, with Time.time to indicate when it was initialy created
         public Modifier(float value, string modifierTag, float currentTime, float lifeTime = -1.0f)
         {
             modifierValue = value;
@@ -166,6 +166,5 @@ public class ModifierContainer
 
         return outValue;
     }
-
 
 }

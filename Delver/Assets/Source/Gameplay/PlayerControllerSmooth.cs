@@ -266,7 +266,7 @@ public class PlayerControllerSmooth : ControlStateMachine
         // Otherwise normal walk inputs
         else
         {
-            characterMover.SetControlInput(inputVector);
+            characterMover.SetControlInput(inputVector * actor.GetSpeedModifier());
         }
     }
 
