@@ -32,7 +32,7 @@ public class Ability_SimpleMelee : Ability
 
         if(currentCollider != null)
         {
-            if (stopMovement && (currentCollider.transform.position - activatedPosition).sqrMagnitude < (maxRange * maxRange))
+            if (stopMovement || (currentCollider.transform.position - activatedPosition).sqrMagnitude > (maxRange * maxRange))
             {
                 currentCollider.transform.position = activatedPosition + activatedDirection * maxRange;
                 RemoveAttackCollider();
