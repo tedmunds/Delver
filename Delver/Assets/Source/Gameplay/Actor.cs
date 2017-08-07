@@ -61,7 +61,7 @@ public class Actor : MonoBehaviour
 
     }
 	
-	protected void Update()
+	protected virtual void Update()
 	{
 		
 	}
@@ -138,5 +138,7 @@ public class Actor : MonoBehaviour
             spriteRenderer.flipX = (facing == Facing.Left);
         }
     }
+
+    public virtual void Reflect(Actor Reflector) { }
 
 }

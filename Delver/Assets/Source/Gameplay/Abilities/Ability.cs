@@ -28,6 +28,9 @@ public class Ability : ScriptableObject
     [SerializeField]
     public float idealRange;
 
+    [SerializeField]
+    public float colliderSpeed = 3.0f;
+
     protected Actor abilityUser;
 
     public Vector3 activatedPosition { get; private set; }
@@ -42,6 +45,7 @@ public class Ability : ScriptableObject
         activatedDirection = direction.normalized;
 
         activatedTime = Time.time;
+
     }
 
     public virtual void UpdateAbility(Actor abilityUser)
