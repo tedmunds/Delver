@@ -86,7 +86,7 @@ public class Actor : MonoBehaviour
     public void CalculateMoveSpeed()
     {
         speedModifier = modifierContainer.GetModifierValue(ModifierTarget.MoveSpeed);
-        Debug.Log(speedModifier);
+        //Debug.Log(speedModifier);
     }
 
     // Apply the damage to the actor generically calling Died() when health hits 0

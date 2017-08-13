@@ -95,6 +95,12 @@ public class PlayerControllerSmooth : ControlStateMachine
 
     [SerializeField]
     private float maxTargetRange = 4.0f;
+
+    [SerializeField]
+    private GameObject targetDirectionPrototype = null;
+
+    [SerializeField]
+    private float directionalIndicatorOffset = 1.0f;
     #endregion
 
     #region combo_params
@@ -133,9 +139,11 @@ public class PlayerControllerSmooth : ControlStateMachine
     private bool bDisableAttack;
 
     // The actor that attacks will be auto focused at
-    private Actor currentTarget;
+    private Actor currentTarget = null;
     private List<Actor> previousTargets = new List<Actor>();
-    private GameObject targetIcon;
+    private GameObject targetIcon = null;
+    private GameObject directionTargetIndicator = null;
+    private Vector3 targetDirection = Vector3.right;
 
     // The current attack combo data
     private AttackCombo attackComboState;
@@ -160,6 +168,9 @@ public class PlayerControllerSmooth : ControlStateMachine
 
         targetIcon = Instantiate(targetIconPrototype);
         targetIcon.SetActive(false);
+
+        directionTargetIndicator = Instantiate(targetDirectionPrototype);
+        directionTargetIndicator.transform.position = transform.position + Vector3.right * directionalIndicatorOffset;
     }
 
 
@@ -185,6 +196,9 @@ public class PlayerControllerSmooth : ControlStateMachine
             CycleTarget();
         }
 
+        // Get the new target direction, but only use it if an input was actually pressed
+        Vector3 currentTargetDirection = PeekControlInput().sqrMagnitude > 0.0? PeekControlInput() : targetDirection;
+
         if(currentTarget != null)
         {
             // the target has been killed/ or otherwise cleaned up
@@ -197,12 +211,23 @@ public class PlayerControllerSmooth : ControlStateMachine
                 // Move the targeting icon over the target, doesnt care if the target moves or whatever
                 targetIcon.transform.position = currentTarget.transform.position - currentTarget.GetBaseOffset();
 
+                currentTargetDirection = (currentTarget.transform.position - transform.position).normalized;
+
                 // Clear target if they move too far away
                 if((currentTarget.transform.position - transform.position).sqrMagnitude > (maxTargetRange * maxTargetRange))
                 {
                     ClearCurrentTarget();
                 }
             }
+        }
+
+        // Point the directional indicator in the correct direction
+        {
+            targetDirection = currentTargetDirection;
+            Vector3 arrowPos = transform.position + (currentTargetDirection * directionalIndicatorOffset);
+            directionTargetIndicator.transform.position = arrowPos;
+
+            directionTargetIndicator.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Rad2Deg * Mathf.Atan2(currentTargetDirection.y, currentTargetDirection.x));
         }
 
         Vector3 currentVelocity = characterMover.GetVelocity();

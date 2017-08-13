@@ -11,6 +11,9 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField]
     private  Vector2 originPos;
+    
+    [SerializeField]
+    private HealthBar healthBarPrototype;
 
     private TileWorldManager world;
 
@@ -23,7 +26,13 @@ public class EnemySpawner : MonoBehaviour
         foreach(GroupMember member in spawnGroup.groupMembers)
         {
             Vector2 tilePos = originPos + member.spawnOffset;
-            world.SpawnEntity(member.enemyToSpawn.gameObject, tilePos);
+            GameObject enemy = world.SpawnEntity(member.enemyToSpawn.gameObject, tilePos);
+            Actor spawnedActor = enemy.GetComponent<Actor>();
+            if(spawnedActor != null)
+            {
+                HealthBar healthBar = Instantiate(healthBarPrototype);
+                healthBar.AttachToTarget(spawnedActor);
+            }
         }
     }
 
