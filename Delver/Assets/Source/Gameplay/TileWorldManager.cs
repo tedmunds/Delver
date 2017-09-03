@@ -191,6 +191,9 @@ public class TileWorldManager : MonoBehaviour
         }
     }
 
-
+    public List<GameObject> GetEntities()
+    {
+        return entities;
+    }
 
 }

@@ -9,6 +9,11 @@ public class Ability_SimpleMelee : Ability
     [SerializeField]
     public AttackCollider colliderType;
 
+    [SerializeField]
+    public OnHit_Ability[] onHitAbilities;
+
+    [SerializeField]
+    public Update_Ability[] updateAbilities;
 
     [SerializeField]
     public float maxRange = 1.0f;
@@ -37,6 +42,11 @@ public class Ability_SimpleMelee : Ability
                 currentCollider.transform.position = activatedPosition + activatedDirection * maxRange;
                 RemoveAttackCollider();
             }
+
+            foreach (Update_Ability ability in updateAbilities)
+            {
+                ability.UpdateAbility(this.abilityUser, this.currentCollider);
+            }
         }
     }
 
@@ -64,6 +74,13 @@ public class Ability_SimpleMelee : Ability
 
     protected virtual bool ValidateHit(Actor hit)
     {
+        foreach(OnHit_Ability ability in onHitAbilities)
+        {
+            if(ability.ValidateHit(hit, this.abilityUser, this.currentCollider))
+            {
+                ability.OnHit(hit, this.abilityUser, this.currentCollider);
+            }
+        }
         return hit.teamNumber != currentCollider.teamNumber;
     }
 
